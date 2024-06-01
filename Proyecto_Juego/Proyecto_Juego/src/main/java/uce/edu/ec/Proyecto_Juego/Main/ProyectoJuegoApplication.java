@@ -6,7 +6,6 @@ public class ProyectoJuegoApplication {
 
 	public static void main(String[] args) {
 		Window juego = new Window();
-
 	}
 
 }

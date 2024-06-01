@@ -17,7 +17,13 @@ public class Window extends JFrame implements KeyListener {
 
 	private final int SCREEN_WIDTH = 800;
 	private final int SCREEN_HEIGHT = 600;
+
+	private boolean leftPressed = false;
+	private boolean rightPressed = false;
+	private boolean hPressed = false;
 	int i = 0;
+
+
 
 	private JPanel lienzo;
 	Container container = new Container();
@@ -37,18 +43,19 @@ public class Window extends JFrame implements KeyListener {
 
 		Timer timer = new Timer(20, new ActionListener() {
 
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				container.moveDown(1);
 				container.moveUp(5);
-				container.updateGame(); // Llamada al método updateGame para verificar colisiones y eliminar aliens
+				 // Llamada al método updateGame para verificar colisiones y eliminar aliens
 
-				if (i % 15 == 0) {
-					System.out.println("hola");
+				if (i % 50 == 0) {
 					container.createShoot_Alien();
 				}
 				repaint();
 				i++;
+
 			}
 		});
 		timer.start();
@@ -58,6 +65,14 @@ public class Window extends JFrame implements KeyListener {
 	public void paint(Graphics g) {
 		super.paint(g);
 		container.Draw(g);
+		container.updateGame();
+
+		if (leftPressed) {
+			container.moveLeft(10);
+		}
+		if (rightPressed) {
+			container.moveRight(10);
+		}
 
 	}
 
@@ -70,12 +85,13 @@ public class Window extends JFrame implements KeyListener {
 
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				container.moveLeft(10);
+				leftPressed = true;
 				break;
 			case KeyEvent.VK_RIGHT:
-				container.moveRight(10);
+				rightPressed = true;
 				break;
 			case KeyEvent.VK_H:
+				hPressed = true;
 				container.createShoot_Ship();
 				break;
 			default:
@@ -87,7 +103,24 @@ public class Window extends JFrame implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+				leftPressed = false;
+				break;
+			case KeyEvent.VK_RIGHT:
+				rightPressed = false;
+				break;
+			case KeyEvent.VK_H:
+				hPressed = true;
+				break;
+			default:
+
+		}
+
 	}
+
+
 }
 
 

@@ -8,11 +8,11 @@ import java.awt.Graphics;
 
 
 public class Line implements Drawable {
-	
+
 	@Override
 	public void draw(Graphics graphics) {
-		graphics.setColor(Color.RED);		
-		graphics.fillRect(0, (int)(600*0.66), 800, 6);	
+		graphics.setColor(Color.RED);
+		graphics.fillRect(0, (int)(600*0.66), 800, 6);
 	}
 
 	@Override
