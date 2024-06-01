@@ -15,8 +15,9 @@ import java.util.Random;
 
 public class Container {
 
+	// genera los aliens entre 750 en x y de 50 en y
 	final int RANDOM_X_ALIEN = 750;
-	final int RANDOM_Y_ALIEN = 100;
+	final int RANDOM_Y_ALIEN = 50;
 
 	List<Levels> levels = new ArrayList<>();
 	List<Alien> aliens = new ArrayList<>();
@@ -27,15 +28,20 @@ public class Container {
 	Random random = new Random();
 	Line line = new Line();
 
-	private static int level = 1;
-	private int showLevel=0;
+	// para usar los niveles fuera del draw se le resta 2, dentro del draw 1 porque se dibuja despues se aumenta
+	private static int level;
+	private int showLevel;
 
 
 	public Container() {
 
+		level = 1;
+		this.showLevel = 0;
+
+		// se crea un nivel con las caracteristicas del nivel
 		levels.add(new Levels("Nivel 1", 5, 1, 5, 100, 5,1));
-		levels.add(new Levels( "Nivel 2", 10, 1, 10, 40, 10,1));
-		levels.add(new Levels( "Nivel 3", 1, 1, 15, 1, 10,2.5f));
+		levels.add(new Levels( "Nivel 2", 10, 2, 10, 35, 10,1));
+		levels.add(new Levels( "Nivel 3", 1, 3, 15, 1, 10,2.5f));
 
 	}
 
@@ -44,84 +50,80 @@ public class Container {
 		line.draw(graphics);
 		nave.draw(graphics);
 
-		if(level == 1 && aliens.size() == 0) {
+		if(level == 1 && aliens.isEmpty()) {
 
 			Ship.setLevel(levels.get(level-1).getLevel());
 			Ship.setShowLevel(true);
 			nave.draw(graphics);
-			while (showLevel != 1000000){
-				System.out.println(showLevel);
-				showLevel += 1;
 
-				if(showLevel == 1000000){
-					Ship.setShowLevel(false);
-				}
+			// se para el hilo durante 1.5 segundos para mostrar en que nivel se encuentra
+			try {
+				Thread.sleep(1500);
+				Ship.setShowLevel(false);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 
+			// aliens que se crean segun el nivel
 			for (int i = 0; i < levels.get(level-1).getNumAlien(); i++) {
-				aliens.add(new Alien(random.nextInt(RANDOM_X_ALIEN), random.nextInt(RANDOM_Y_ALIEN), levels.get(level-1).getSizeAlien()));
+				aliens.add(new Alien(random.nextInt(RANDOM_X_ALIEN), random.nextInt(RANDOM_Y_ALIEN) + 40, levels.get(level-1).getSizeAlien(), level));
 			}
-			level +=1;
-			showLevel = 0;
 
-		} else if (level == 2 && aliens.size() == 0) {
+			// se aumenta el nivel
+			level +=1;
+
+		} else if (level == 2 && aliens.isEmpty()) {
 
 			Ship.setLevel(levels.get(level-1).getLevel());
 			Ship.setShowLevel(true);
 			nave.draw(graphics);
-			while (showLevel != 1000000){
-				System.out.println(showLevel);
-				showLevel += 1;
 
-				if(showLevel == 1000000){
-					Ship.setShowLevel(false);
-				}
+			try {
+				Thread.sleep(1500);
+				Ship.setShowLevel(false);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 
 			for (int i = 0; i < levels.get(level-1).getNumAlien(); i++) {
-				aliens.add(new Alien(random.nextInt(RANDOM_X_ALIEN), random.nextInt(RANDOM_Y_ALIEN), levels.get(level-1).getSizeAlien()));
+				aliens.add(new Alien(random.nextInt(RANDOM_X_ALIEN), random.nextInt(RANDOM_Y_ALIEN) + 40, levels.get(level-1).getSizeAlien(), level));
 			}
-			level +=1;
-			showLevel = 0;
 
-		} else if (level == 3 && aliens.size() == 0) {
+			level +=1;
+
+		} else if (level == 3 && aliens.isEmpty()) {
 
 			Ship.setLevel(levels.get(level-1).getLevel());
 			Ship.setShowLevel(true);
 			nave.draw(graphics);
-			while (showLevel != 1000000){
-				System.out.println(showLevel);
-				showLevel += 1;
 
-				if(showLevel == 1000000){
-					Ship.setShowLevel(false);
-				}
+			try {
+				Thread.sleep(1500);
+				Ship.setShowLevel(false);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 
 			for (int i = 0; i < levels.get(level-1).getNumAlien(); i++) {
-				aliens.add(new Alien(random.nextInt(RANDOM_X_ALIEN), random.nextInt(RANDOM_Y_ALIEN), levels.get(level-1).getSizeAlien()));
+				aliens.add(new Alien(400, 100, levels.get(level-1).getSizeAlien(), level));
 			}
+
 			level +=1;
-			showLevel = 0;
 
 		}
 
-
+		// se dibuja los aliens, las balas y la nave
 		for (Alien alien : aliens) {
 			alien.draw(graphics);
+		}
 
-			for (Bullet bullet : bullets_Alien) {
-				bullet.draw(graphics, alien);
-			}
-
+		for (Bullet bullet : bullets_Alien) {
+			bullet.draw(graphics);
 		}
 
 		for (Bullet bullet : bullets_Ship) {
-			bullet.draw(graphics, nave);
+			bullet.draw(graphics);
 		}
-
-
-
 
 	}
 
@@ -134,17 +136,20 @@ public class Container {
 	}
 
 	public void moveDown(int move) {
-		for (Alien alien : aliens) {
-			alien.moveDown(move);
-		}
+
+		// hace que el alien se quede estatico en el nivel 3
 		if(level-1 != 3){
 
+			for (Alien alien : aliens) {
+				alien.moveDown(move);
+			}
 
 		}
 
 		for (Bullet bullet : bullets_Alien) {
-			bullet.moveDown(move*3);
+			bullet.moveDown(move*10);
 		}
+
 	}
 
 	public void moveUp(int move) {
@@ -154,14 +159,28 @@ public class Container {
 	}
 
 	public void createShoot_Ship() {
-		if(Ship.getLife() > 0) {
-			bullets_Ship.add(new Bullet(nave, level-1));
+		if(nave.getLife() > 0) {
+			bullets_Ship.add(new Bullet(nave, level-1, 0));
 		}
 	}
 
 	public void createShoot_Alien() {
 		if (aliens.size()>0) {
-			bullets_Alien.add(new Bullet(aliens.get(random.nextInt(aliens.size())), level-1));
+
+			int shot_Alien = random.nextInt(aliens.size());
+
+			if (level-1 == 1) {
+				bullets_Alien.add(new Bullet(aliens.get(shot_Alien), level-1, 0));
+			} else if (level-1 == 2) {
+				bullets_Alien.add(new Bullet(aliens.get(shot_Alien), level-1, 1));
+				bullets_Alien.add(new Bullet(aliens.get(shot_Alien), level-1, 4));
+			} else if (level-1 == 3) {
+				bullets_Alien.add(new Bullet(aliens.get(shot_Alien), level-1, 0));
+				bullets_Alien.add(new Bullet(aliens.get(shot_Alien), level-1, 1));
+				bullets_Alien.add(new Bullet(aliens.get(shot_Alien), level-1, 4));
+			}
+
+
 		}
 	}
 
@@ -182,27 +201,24 @@ public class Container {
 					bulletIterator.remove();
 					bulletRemoved = true;
 
-					System.out.println(level-2);
-
 					if(level-1 ==3){
-						if (Ship.getLife() <= 50){
-							System.out.println("entro por 5 pts");
-							alien.reduceLifeAlien(5);
+
+						if (nave.getLife() <= 50){
+							alien.reduceLife(5);
 							nave.moreScore(levels.get(level-2).getMoreScore());
-						} else if (Ship.getLife() > 50  && Ship.getLife() <= 75) {
-							System.out.println("entro por 10 pts");
-							alien.reduceLifeAlien(10);
+						} else if (nave.getLife() > 50  && nave.getLife() <= 75) {
+							alien.reduceLife(10);
 							nave.moreScore(levels.get(level-2).getMoreScore());
-						} else if (Ship.getLife() > 75) {
-							System.out.println("entro por 15 pts");
-							alien.reduceLifeAlien(15);
+						} else if (nave.getLife() > 75) {
+							alien.reduceLife(15);
 							nave.moreScore(levels.get(level-2).getMoreScore());
 						}
 
 					}else{
-						System.out.println("no entro");
-						alien.reduceLifeAlien(levels.get(level-2).getLifeAlien());
+
+						alien.reduceLife(levels.get(level-2).getLifeAlien());
 						nave.moreScore(levels.get(level-2).getMoreScore());
+
 					}
 
 					break;
@@ -211,7 +227,6 @@ public class Container {
 			}
 			if (bulletRemoved) break;
 		}
-
 
 		bulletIterator = bullets_Alien.iterator();
 		while (bulletIterator.hasNext()) {
@@ -234,6 +249,7 @@ public class Container {
 		bullets_Ship.removeIf(bullet -> bullet.pos_Y < 0);
 		aliens.removeIf(alien -> alien.getPoints_Y()[1]>(int)(600*0.66) );
 		bullets_Alien.removeIf(bullet -> bullet.pos_Y > 600);
+
 	}
 
 

@@ -41,20 +41,27 @@ public class Window extends JFrame implements KeyListener {
 		addKeyListener(this);
 		setVisible(true);
 
-		Timer timer = new Timer(20, new ActionListener() {
+		Timer timer = new Timer(1, new ActionListener() {
 
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				container.moveDown(1);
-				container.moveUp(5);
 				 // Llamada al método updateGame para verificar colisiones y eliminar aliens
+				container.moveUp(4);
 
-				if (i % 50 == 0) {
+				if (i % 4 == 0) {
+					container.moveDown(1);
+				}
+
+				if (i % 100 == 0) {
 					container.createShoot_Alien();
 				}
-				repaint();
 				i++;
+
+
+				repaint();
+
+
 
 			}
 		});

@@ -9,10 +9,16 @@ import java.awt.Graphics;
 
 public class Line implements Drawable {
 
+	private int lineHeight;
+
+	public Line() {
+		this.lineHeight = (int)(600*0.66);
+	}
+
 	@Override
 	public void draw(Graphics graphics) {
 		graphics.setColor(Color.RED);
-		graphics.fillRect(0, (int)(600*0.66), 800, 6);
+		graphics.fillRect(0, lineHeight, 800, 6);
 	}
 
 	@Override
@@ -20,7 +26,11 @@ public class Line implements Drawable {
 
 	}
 
-	
-	
+	public int getLineHeight() {
+		return lineHeight;
+	}
 
+	public void setLineHeight(int lineHeight) {
+		this.lineHeight = lineHeight;
+	}
 }

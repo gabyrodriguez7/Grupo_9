@@ -14,44 +14,20 @@ public class Bullet implements Drawable, Movable {
 	public int pos_Y;
 	private int level;
 
-	public Bullet(Characters character, int level) {
+	public Bullet(Characters character, int level,int posBullet) {
 		this.level = level;
-		pos_X = character.getPoints_X()[0];
-		pos_Y = character.getPoints_Y()[0];
+		pos_X = character.getPoints_X()[posBullet];
+		pos_Y = character.getPoints_Y()[posBullet];
 	}
 
 	@Override
 	public void draw(Graphics graphics) {
+		graphics.setColor(Color.WHITE);
+		graphics.fillOval(pos_X-5, pos_Y, 10, 15);
 	}
 
 	@Override
 	public void draw(Graphics graphics, Characters character) {
-
-		if (character instanceof Alien){
-			if(level ==1){
-				graphics.setColor(Color.WHITE);
-				graphics.fillOval(pos_X-5, pos_Y+20, 10, 15);
-
-			}else if (level == 2) {
-				graphics.setColor(Color.WHITE);
-				graphics.fillOval(pos_X - 5 - (character.getPoints_X()[0]-character.getPoints_X()[2]), pos_Y+15, 10, 15);
-				graphics.fillOval(pos_X - 5 + (character.getPoints_X()[0]-character.getPoints_X()[2]), pos_Y+15, 10, 15);
-
-
-			}else if (level == 3) {
-				graphics.setColor(Color.WHITE);
-				graphics.fillOval(pos_X - 5, pos_Y, 10, 15);
-				graphics.fillOval(pos_X - 5 - (character.getPoints_X()[0]-character.getPoints_X()[2]), pos_Y+15, 10, 15);
-				graphics.fillOval(pos_X - 5 + (character.getPoints_X()[0]-character.getPoints_X()[2]), pos_Y+15, 10, 15);
-
-			}
-
-		} else if (character instanceof Ship) {
-			graphics.setColor(Color.WHITE);
-			graphics.fillOval(pos_X -5, pos_Y, 10, 15);
-		}
-
-
 	}
 
 	@Override
@@ -66,12 +42,10 @@ public class Bullet implements Drawable, Movable {
 
 	@Override
 	public void moveLeft(int move) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void moveRight(int move) {
-		// TODO Auto-generated method stub
 	}
 
 	public int getX() {
