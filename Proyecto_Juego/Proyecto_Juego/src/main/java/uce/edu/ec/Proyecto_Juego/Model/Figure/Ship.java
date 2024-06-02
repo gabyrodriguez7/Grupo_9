@@ -4,6 +4,7 @@ import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Collisionable;
 import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Drawable;
 import uce.edu.ec.Proyecto_Juego.Model.Interfaces.LifeReducible;
 import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Movable;
+import uce.edu.ec.Proyecto_Juego.Window.GameOver;
 
 import java.awt.*;
 
@@ -30,7 +31,7 @@ public class Ship extends Characters implements Drawable, Movable, Collisionable
 
 	@Override
 	public void draw(Graphics graphics) {
-		if (alive && life > 0) {
+		if (alive && life >= 0) {
 			//dibuja la Nave
 			graphics.setColor(Color.white);
 			graphics.fillPolygon(getPoints_X(), getPoints_Y(), 3);
@@ -125,10 +126,16 @@ public class Ship extends Characters implements Drawable, Movable, Collisionable
 	@Override
 	public void reduceLife(int reduceLife){
 
-		if(life>0){
+		if (life > 0) {
 			life -= reduceLife;
-			for (int i=1; i<=2; i++){
-				life_X[i]-= (int) (reduceLife*1.5);
+			if (life < 0) {
+				life = 0;
+			}
+			for (int i = 1; i <= 2; i++) {
+				life_X[i] -= (int) (reduceLife * 1.5);
+				if (life_X[i] < 0) {
+					life_X[i] = 0;
+				}
 			}
 		}
 

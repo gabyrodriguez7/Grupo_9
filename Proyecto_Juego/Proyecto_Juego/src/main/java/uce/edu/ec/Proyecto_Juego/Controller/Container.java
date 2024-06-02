@@ -1,10 +1,17 @@
 package uce.edu.ec.Proyecto_Juego.Controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import uce.edu.ec.Proyecto_Juego.Model.Figure.Alien;
 import uce.edu.ec.Proyecto_Juego.Model.Figure.Bullet;
 import uce.edu.ec.Proyecto_Juego.Model.Figure.Ship;
+import uce.edu.ec.Proyecto_Juego.Model.Figure.User;
 import uce.edu.ec.Proyecto_Juego.Model.Stage.Levels;
 import uce.edu.ec.Proyecto_Juego.Model.Stage.Line;
+import uce.edu.ec.Proyecto_Juego.Window.Window;
+import uce.edu.ec.Proyecto_Juego.Window.GameOver;
 
 import java.awt.Graphics;
 
@@ -13,7 +20,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+
 public class Container {
+
+/*	@Autowired
+	ServiceGame repositoryU;
+
+	@PostMapping("/User")
+	private void createUser(@RequestBody User user){
+    repositoryU.createGame(user);
+	}*/
 
 	// genera los aliens entre 750 en x y de 50 en y
 	final int RANDOM_X_ALIEN = 750;
@@ -31,10 +47,15 @@ public class Container {
 	// para usar los niveles fuera del draw se le resta 2, dentro del draw 1 porque se dibuja despues se aumenta
 	private static int level;
 	private int showLevel;
+	private Window window;
+
+	User user;
 
 
-	public Container() {
 
+
+	public Container(Window window) {
+        this.window =window;
 		level = 1;
 		this.showLevel = 0;
 
@@ -42,7 +63,6 @@ public class Container {
 		levels.add(new Levels("Nivel 1", 5, 1, 5, 100, 5,1));
 		levels.add(new Levels( "Nivel 2", 10, 2, 10, 35, 10,1));
 		levels.add(new Levels( "Nivel 3", 1, 3, 15, 1, 10,2.5f));
-
 	}
 
 
@@ -188,6 +208,7 @@ public class Container {
 		checkCollisions();
 		removeDeadAliens();
 		removeOffScreenBullets();
+		closeWindowAndShowGameOver();
 	}
 
 	private void checkCollisions() {
@@ -241,6 +262,7 @@ public class Container {
 	}
 
 	private void removeDeadAliens() {
+
 		aliens.removeIf(alien -> alien.getLife()<=0);
 	}
 
@@ -252,5 +274,11 @@ public class Container {
 
 	}
 
+	public void closeWindowAndShowGameOver(){
+		if(nave.getLife()<=0){
+			window.dispose();
+			new GameOver(nave.getScore(),nave.getLife()).setVisible(true);
+		}
+	}
 
 }
