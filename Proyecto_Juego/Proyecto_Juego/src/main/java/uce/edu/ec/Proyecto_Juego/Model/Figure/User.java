@@ -7,23 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
 
-@Entity
+
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id",nullable = false)
+
     private int id;
-    @Column(nullable = false, unique = true)
     private String user;
-    @Column(nullable = false)
     private String password;
-    @Column
     private int life;
-    @Column
     private int score;
-    @Column
     private int level;
 
     public User() {

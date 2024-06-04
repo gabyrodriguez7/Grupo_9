@@ -4,7 +4,6 @@ import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Collisionable;
 import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Drawable;
 import uce.edu.ec.Proyecto_Juego.Model.Interfaces.LifeReducible;
 import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Movable;
-import uce.edu.ec.Proyecto_Juego.Window.GameOver;
 
 import java.awt.*;
 

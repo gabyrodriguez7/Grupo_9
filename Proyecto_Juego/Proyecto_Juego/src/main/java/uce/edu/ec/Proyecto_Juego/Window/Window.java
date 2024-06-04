@@ -26,6 +26,7 @@ public class Window extends JFrame implements KeyListener {
 	private JTextField usernameField;
 	private JPasswordField passwordField;
 	private JButton startButton;
+	private JButton registerButton;
 
 	private JPanel lienzo;
 	Container container;
@@ -50,23 +51,23 @@ public class Window extends JFrame implements KeyListener {
 		registrationPanel.setBackground(new Color(20, 20, 20));
 		registrationPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-// Crear GridBagConstraints para configurar el posicionamiento y el tamaño de los componentes
+		// Crear GridBagConstraints para configurar el posicionamiento y el tamaño de los componentes
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.insets = new Insets(5, 5, 5, 5); // Espaciado entre componentes
 
-// Label y campo de usuario
+		// Label y campo de usuario
 		JLabel usernameLabel = new JLabel("Usuario:");
 		usernameLabel.setForeground(Color.WHITE);
 		usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
 		registrationPanel.add(usernameLabel, gbc);
 
 		gbc.gridx = 1;
-		JTextField usernameField = new JTextField(20); // Ancho predeterminado
+		usernameField = new JTextField(20); // Ancho predeterminado
 		registrationPanel.add(usernameField, gbc);
 
-// Label y campo de contraseña
+		// Label y campo de contraseña
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		JLabel passwordLabel = new JLabel("Contraseña:");
@@ -75,18 +76,44 @@ public class Window extends JFrame implements KeyListener {
 		registrationPanel.add(passwordLabel, gbc);
 
 		gbc.gridx = 1;
-		JPasswordField passwordField = new JPasswordField(20);
+		passwordField = new JPasswordField(20);
 		registrationPanel.add(passwordField, gbc);
 
-// Botón de inicio de sesión
+		// Botón de registro
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		gbc.gridwidth = 2; // El botón ocupa dos columnas
+		gbc.gridwidth = 1; // El botón ocupa una columna
 		gbc.anchor = GridBagConstraints.CENTER; // Centrar el botón
 		gbc.fill = GridBagConstraints.HORIZONTAL; // El botón se extiende horizontalmente
-		gbc.insets = new Insets(20, 0, 0, 0); // Espaciado adicional en la parte superior del botón
+		gbc.insets = new Insets(20, 0, 0, 5); // Espaciado adicional en la parte superior y derecha del botón
 
-		JButton startButton = new JButton("Siguiente");
+		registerButton = new JButton("Registrarse");
+		registerButton.setBackground(new Color(30, 144, 255));
+		registerButton.setForeground(Color.WHITE);
+		registerButton.setFocusPainted(false);
+		registerButton.setFont(new Font("Arial", Font.BOLD, 14));
+		registrationPanel.add(registerButton, gbc);
+
+
+		registerButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				username = usernameField.getText();
+				password = new String(passwordField.getPassword());
+
+				container = new Container(Window.this);
+				switchToGamePanel();
+			}
+		});
+
+		// Botón de inicio de sesión
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		gbc.anchor = GridBagConstraints.CENTER; // Centrar el botón
+		gbc.fill = GridBagConstraints.HORIZONTAL; // El botón se extiende horizontalmente
+		gbc.insets = new Insets(20, 5, 0, 0); // Espaciado adicional en la parte superior y izquierda del botón
+
+		startButton = new JButton("Siguiente");
 		startButton.setBackground(new Color(30, 144, 255));
 		startButton.setForeground(Color.WHITE);
 		startButton.setFocusPainted(false);
@@ -96,9 +123,8 @@ public class Window extends JFrame implements KeyListener {
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				 username = usernameField.getText();
-				 password = new String(passwordField.getPassword());
+				username = usernameField.getText();
+				password = new String(passwordField.getPassword());
 
 				container = new Container(Window.this);
 				switchToGamePanel();
@@ -202,11 +228,11 @@ public class Window extends JFrame implements KeyListener {
 
 	}
 
-	public String getUsername() {
+	public static String getUsername() {
 		return username;
 	}
 
-	public String getPassword() {
+	public static String getPassword() {
 		return password;
 	}
 }
