@@ -95,7 +95,7 @@ public class End extends JFrame {
 		// Configurar la fuente y el color de la vida
 		g.setFont(new Font("Arial", Font.BOLD, 40));
 		g.setColor(Color.white);
-		String lifeText = "Su vida es: " + life;
+		String lifeText = "Vida: " + life;
 		int lifeWidth = g.getFontMetrics().stringWidth(lifeText);
 		g.drawString(lifeText, x - lifeWidth / 2, y + 200);
 	}
