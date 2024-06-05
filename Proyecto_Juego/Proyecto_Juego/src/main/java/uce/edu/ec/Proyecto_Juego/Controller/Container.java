@@ -358,7 +358,7 @@ public class Container {
 					HttpMethod.PUT,
 					request,
 					User.class
-			);
+			 );
 
 			// Manejo de la respuesta
 			if (response.getStatusCode().is2xxSuccessful()) {
