@@ -13,43 +13,22 @@ public class PersonService {
     public void save(User person){
        repository.save(person);
     }
-   /* public void printAllPersons() {
-        List<Person> persons = repository.findAll();
-        System.out.println("Lista de personas en la base de datos:");
-        for (Person person : persons) {
-            System.out.println(person.toString());
+
+    public User findByUserAndPassword(String user, String password) {
+        return repository.findByUserAndPassword(user, password);
+    }
+
+    public User validateAndUpdateUser(String username, String password, User updatedUser) {
+        User foundUser = repository.findByUserAndPassword(username, password);
+        if (foundUser == null) {
+            throw new RuntimeException("Usuario o contraseña incorrectos");
         }
+        // Actualizar los campos necesarios sin modificar username y password
+        foundUser.setLife(updatedUser.getLife());
+        foundUser.setScore(updatedUser.getScore());
+        foundUser.setLevel(updatedUser.getLevel());
+        return repository.save(foundUser);
     }
-
-    public void findIdentity(long id){
-         //Para decirte que puede ir cualquier tipo de clase
-        Optional<Person> optionalPerson = repository.findById(id);
-
-        if(optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
-            System.out.println("Persona encontrada: " + person);
-        } else {
-            System.out.println("No se encontró ninguna persona con el ID: " + id);
-        }
-    }
-    public void findLastname(String lastname){
-       List<Person> persons = repository.findByLastname(lastname);
-        if (!persons.isEmpty()) {
-            System.out.println("Personas encontradas con el apellido '" + lastname + "':");
-            for (Person person : persons) {
-                System.out.println(person);
-            }
-        } else {
-            System.out.println("No se encontraron personas con el apellido '" + lastname + "'");
-        }
-    }
-    public void updatePerson(Person person){
-        repository.save(person);
-        System.out.println("Persona actualizada exitosamente: " + person);
-    }
-*/
-
-
 
 
 }
