@@ -1,6 +1,5 @@
 package ec.uce.edu.basicJPA.services;
 
-
 import ec.uce.edu.basicJPA.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +9,6 @@ public class ServicesWeb {
 
     @Autowired
     private PersonService userService;
-
-    @RequestMapping(value="/miurl2",method = RequestMethod.GET)
-    public String miSegundoEndPoint(){
-
-       return "Este es mi segundo end point con POST";
-    }
-
 
     @PostMapping(value = "/createUser")
     private void createUser(@RequestBody User user) {
@@ -31,6 +23,7 @@ public class ServicesWeb {
         }
         return foundUser;
     }
+
     @PutMapping(value = "/updateUser")
     public User updateUser(@RequestParam String user, @RequestParam String password, @RequestBody User updatedUser) {
         User foundUser = userService.findByUserAndPassword(user, password);
@@ -38,17 +31,15 @@ public class ServicesWeb {
             throw new RuntimeException("User no encontrado");
         }
         // Actualizar los campos restantes
-        foundUser.setLife(updatedUser.getLife());
+        foundUser.setLifeShip(updatedUser.getLifeShip());
         foundUser.setScore(updatedUser.getScore());
         foundUser.setLevel(updatedUser.getLevel());
+        foundUser.setLifeAllien(updatedUser.getLifeAllien());
+        foundUser.setNumAllien(updatedUser.getNumAllien());
 
         userService.save(foundUser); // Guardar los cambios
 
         return foundUser;
     }
-
-
-
-
 
 }

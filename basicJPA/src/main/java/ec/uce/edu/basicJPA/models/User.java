@@ -1,8 +1,6 @@
 package ec.uce.edu.basicJPA.models;
 
-
 import jakarta.persistence.*;
-
 
 @Entity
 public class User {
@@ -16,21 +14,28 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column
-    private int life;
+    private int lifeShip;
     @Column
     private int score;
     @Column
     private int level;
+    @Column
+    private int lifeAllien;
+    @Column
+    private int numAllien;
 
     public User() {
     }
 
-    public User( String user, String password, int life, int score, int level) {
+    public User(int id, String user, int lifeShip, int score, String password, int lifeAllien, int level, int numAllien) {
+        this.id = id;
         this.user = user;
-        this.password = password;
-        this.life = life;
+        this.lifeShip = lifeShip;
         this.score = score;
+        this.password = password;
+        this.lifeAllien = lifeAllien;
         this.level = level;
+        this.numAllien = numAllien;
     }
 
     public int getId() {
@@ -57,12 +62,12 @@ public class User {
         this.password = password;
     }
 
-    public int getLife() {
-        return life;
+    public int getLifeShip() {
+        return lifeShip;
     }
 
-    public void setLife(int life) {
-        this.life = life;
+    public void setLifeShip(int lifeShip) {
+        this.lifeShip = lifeShip;
     }
 
     public int getScore() {
@@ -81,16 +86,20 @@ public class User {
         this.level = level;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", user='" + user + '\'' +
-                ", password='" + password + '\'' +
-                ", life=" + life +
-                ", score=" + score +
-                ", level=" + level +
-                '}';
-        }
+    public int getLifeAllien() {
+        return lifeAllien;
+    }
+
+    public void setLifeAllien(int lifeAllien) {
+        this.lifeAllien = lifeAllien;
+    }
+
+    public int getNumAllien() {
+        return numAllien;
+    }
+
+    public void setNumAllien(int numAllien) {
+        this.numAllien = numAllien;
+    }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PersonService {
+
     @Autowired
     PersonRepository repository;
 
@@ -24,11 +25,12 @@ public class PersonService {
             throw new RuntimeException("Usuario o contraseña incorrectos");
         }
         // Actualizar los campos necesarios sin modificar username y password
-        foundUser.setLife(updatedUser.getLife());
+        foundUser.setLifeShip(updatedUser.getLifeShip());
         foundUser.setScore(updatedUser.getScore());
         foundUser.setLevel(updatedUser.getLevel());
+        foundUser.setLifeAllien(updatedUser.getLifeAllien());
+        foundUser.setNumAllien(updatedUser.getNumAllien());
         return repository.save(foundUser);
     }
-
 
 }
