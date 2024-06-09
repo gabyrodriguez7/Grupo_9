@@ -7,7 +7,6 @@ import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Movable;
 
 import java.awt.*;
 
-
 public class Alien extends Characters implements Drawable, Movable, Collisionable, LifeReducible {
 	int[] alien_X = {25, 0, 0, 50, 50};
 	int[] alien_Y = {25, 50, 0, 0, 50};
@@ -20,49 +19,45 @@ public class Alien extends Characters implements Drawable, Movable, Collisionabl
 	private float sizeAlien;
 	private float wideAlien;
 
-	public Alien(int ran_X, int ran_Y, float sizeAlien, int level) {
-
+	public Alien(int ran_X, int ran_Y, float sizeAlien, int level, int life) {
 		super.setPoints_X(alien_X);
 		super.setPoints_Y(alien_Y);
+
 		this.sizeAlien = sizeAlien;
 		this.alive = true;
-		this.life = 100;
+		this.life = life;
+		this.wideAlien =(getPoints_X()[3] - getPoints_X()[2])*sizeAlien;
 
 		if (level == 3){
 
-			this.wideAlien = ((int) ((getPoints_X()[3] - getPoints_X()[2])*sizeAlien) /100);
-
 			for (int i = 0; i < getPoints_X().length; i++) {
-				// logica para incrementar el tamaño del alien y moverlo por la pantalla
+				// logica para incrementar el tamaño del alien
 				getPoints_X()[i] *= (int) sizeAlien;
 				getPoints_Y()[i] *= (int) sizeAlien;
-				getPoints_X()[i] += ran_X - wideAlien * 100/sizeAlien;
+				getPoints_X()[i] += (int) (ran_X - ((wideAlien)/2));
 				getPoints_Y()[i] += ran_Y ;
 			}
 
-		}else {
+			this.wideAlien =(getPoints_X()[3] - getPoints_X()[2]);
 
-			this.wideAlien = ((float) ((getPoints_X()[3] - getPoints_X()[2])*sizeAlien) /100);
+		}else {
 
 			for (int i = 0; i < getPoints_X().length; i++) {
 				// logica para incrementar el tamaño del alien y moverlo por la pantalla
 				getPoints_X()[i] *= (int) sizeAlien;
 				getPoints_Y()[i] *= (int) sizeAlien;
-				getPoints_X()[i] += ran_X ;
-				getPoints_Y()[i] += ran_Y;
+				getPoints_X()[i] = getPoints_X()[i] + ran_X ;
+				getPoints_Y()[i] = getPoints_Y()[i] + ran_Y;
 			}
+
+			this.wideAlien =(getPoints_X()[3] - getPoints_X()[2]);
+
 		}
 
-
-
-		// se asinga despues apra que coja el ancho del alien y nos arroamos un calculo
-
-
-
-		// como se asigna la vida del alien con las cordenas del alien y poniendo un poco arriba del mismo
+		// se asigna el alien las cordenas de vida segun el tamaño que este tenga
 		life_X[0] = getPoints_X()[2];
-		life_X[1] = getPoints_X()[3];
-		life_X[2] = getPoints_X()[3];
+		life_X[1] = (int) (getPoints_X()[2]+ life*wideAlien/100);
+		life_X[2] = (int) (getPoints_X()[2]+ life*wideAlien/100);;
 		life_X[3] = getPoints_X()[2];
 
 		life_Y[0] = getPoints_Y()[2]-12;
@@ -75,7 +70,7 @@ public class Alien extends Characters implements Drawable, Movable, Collisionabl
 	@Override
 	public void draw(Graphics graphics) {
 
-		if (life > 0) {
+		if (life > 1) {
 			//dibuja al Alien
 			graphics.setColor(Color.GREEN);
 			graphics.fillPolygon(getPoints_X(), getPoints_Y(), 5);
@@ -140,10 +135,16 @@ public class Alien extends Characters implements Drawable, Movable, Collisionabl
 	@Override
 	public void reduceLife(int reduceLife){
 
-		if(life>0){
+		if(life>1){
 			life -= reduceLife;
+			if (life < 0) {
+				life = 0;
+			}
 			for (int i=1; i<=2; i++){
-				life_X[i]-= (int) (reduceLife*wideAlien);
+				life_X[i]-= (int) (reduceLife*wideAlien/100);
+				if (life_X[i] < 0) {
+					life_X[i]=0;
+				}
 			}
 		}
 
@@ -208,4 +209,9 @@ public class Alien extends Characters implements Drawable, Movable, Collisionabl
 	public int getLife() {
 		return life;
 	}
+
+	public void setLife(int life) {
+		this.life = life;
+	}
+
 }

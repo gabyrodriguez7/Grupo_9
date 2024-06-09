@@ -6,7 +6,6 @@ import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Drawable;
 import java.awt.Color;
 import java.awt.Graphics;
 
-
 public class Line implements Drawable {
 
 	private int lineHeight;
@@ -33,4 +32,5 @@ public class Line implements Drawable {
 	public void setLineHeight(int lineHeight) {
 		this.lineHeight = lineHeight;
 	}
+
 }

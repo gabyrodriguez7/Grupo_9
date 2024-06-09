@@ -8,26 +8,27 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+
 public class End extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private boolean gameOverDisplayed = false;
 	private JPanel contentPane;
 	private boolean blinkState = true;
 
 	int score;
 	int life;
 	Image background;
+	private boolean passLineRed;
 
 	public End(int score, int life) {
-		super("---Game Over---");
+		super("---End---");
 		this.life = life;
 		this.score = score;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(800, 600); // Ajustar el tamaño de la ventana
+		setSize(800, 600); // Ajustar el tamaÃ±o de la ventana
 		setLocationRelativeTo(null);
 
 		setFocusable(true);
@@ -42,13 +43,15 @@ public class End extends JFrame {
 				}
 			}
 		};
+
 		contentPane.setBackground(Color.black);
 		setContentPane(contentPane);
 
 		try {
-			URL resource = getClass().getResource("/space.jpg");
-			if (resource != null) {
-				background = ImageIO.read(resource);
+			// Ruta absoluta o relativa al archivo de imagen
+			File file = new File("src/main/resources/space.jpg");
+			if (file.exists()) {
+				background = ImageIO.read(file);
 			} else {
 				System.err.println("No se pudo encontrar la imagen en la ruta especificada.");
 			}
@@ -61,6 +64,7 @@ public class End extends JFrame {
 			repaint();
 		});
 		timer.start();
+
 	}
 
 	private void drawScore(Graphics g) {
@@ -69,21 +73,27 @@ public class End extends JFrame {
 
 		// Configurar la fuente y el color del texto "Game Over" o "You Win!"
 		g.setFont(new Font("Arial", Font.BOLD, 80));
-		if (life > 0) {
-			g.setColor(Color.green);
-			String winText = "YOU WIN!";
-			int winWidth = g.getFontMetrics().stringWidth(winText);
-			if (blinkState) {
-				g.drawString(winText, x - winWidth / 2, y);
-			}
-		} else {
+
+		if (life < 1 || passLineRed) {
+
 			g.setColor(Color.red);
 			String gameOverText = "GAME OVER";
 			int gameOverWidth = g.getFontMetrics().stringWidth(gameOverText);
 			if (blinkState) {
 				g.drawString(gameOverText, x - gameOverWidth / 2, y);
 			}
+
+		}else if (life > 0) {
+
+			g.setColor(Color.green);
+			String winText = "YOU WIN!";
+			int winWidth = g.getFontMetrics().stringWidth(winText);
+			if (blinkState) {
+				g.drawString(winText, x - winWidth / 2, y);
+			}
+
 		}
+
 
 		// Configurar la fuente y el color del puntaje
 		g.setFont(new Font("Arial", Font.BOLD, 40));
@@ -95,8 +105,18 @@ public class End extends JFrame {
 		// Configurar la fuente y el color de la vida
 		g.setFont(new Font("Arial", Font.BOLD, 40));
 		g.setColor(Color.white);
-		String lifeText = "Vida: " + life;
+		String lifeText = "Su vida es: " + life;
 		int lifeWidth = g.getFontMetrics().stringWidth(lifeText);
 		g.drawString(lifeText, x - lifeWidth / 2, y + 200);
+
 	}
+
+	public boolean isPassLineRed() {
+		return passLineRed;
+	}
+
+	public void setPassLineRed(boolean passLineRed) {
+		this.passLineRed = passLineRed;
+	}
+
 }

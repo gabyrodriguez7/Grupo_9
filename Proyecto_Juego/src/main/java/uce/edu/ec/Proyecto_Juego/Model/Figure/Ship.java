@@ -8,7 +8,6 @@ import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Movable;
 import java.awt.*;
 
 public class Ship extends Characters implements Drawable, Movable, Collisionable, LifeReducible {
-
 	int [] life_X = {25, 175, 175, 25};
 	int [] life_Y = {50, 50, 65, 65};
 
@@ -18,13 +17,22 @@ public class Ship extends Characters implements Drawable, Movable, Collisionable
 	private static boolean showLevel;
 	private static String level;
 
-	public Ship() {
+	public Ship(boolean modicateLife, int life) {
 		super.setPoints_X(new int[]{400, 425, 375});
 		super.setPoints_Y(new int[]{476, 526, 526});
 
 		this.alive = true;
-		this.life = 100;
 		this.score = 0;
+
+		if (modicateLife){
+			this.life = life;
+			life_X [0] = 25;
+			life_X [1] = (int) (25+(life*1.5));
+			life_X [2] = (int) (25+(life*1.5));
+			life_X [3] = 25;
+		} else {
+			this.life = 100;
+		}
 
 	}
 
@@ -130,6 +138,7 @@ public class Ship extends Characters implements Drawable, Movable, Collisionable
 			if (life < 0) {
 				life = 0;
 			}
+
 			for (int i = 1; i <= 2; i++) {
 				life_X[i] -= (int) (reduceLife * 1.5);
 				if (life_X[i] < 0) {
@@ -211,6 +220,10 @@ public class Ship extends Characters implements Drawable, Movable, Collisionable
 		return life;
 	}
 
+	public void setLife(int life) {
+		this.life = life;
+	}
+
 	public static void setShowLevel(boolean showLevel) {
 		Ship.showLevel = showLevel;
 	}
@@ -218,4 +231,5 @@ public class Ship extends Characters implements Drawable, Movable, Collisionable
 	public static void setLevel(String level) {
 		Ship.level = level;
 	}
+
 }

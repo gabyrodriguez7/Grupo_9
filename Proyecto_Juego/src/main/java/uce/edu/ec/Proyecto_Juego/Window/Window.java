@@ -1,10 +1,8 @@
 package uce.edu.ec.Proyecto_Juego.Window;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
+import java.util.Locale;
 
 import javax.swing.*;
 
@@ -12,22 +10,32 @@ import uce.edu.ec.Proyecto_Juego.Controller.Container;
 
 public class Window extends JFrame implements KeyListener {
 
+	// variables para controlar el tamaño de la ventana
 	private final int SCREEN_WIDTH = 800;
 	private final int SCREEN_HEIGHT = 600;
 
+	// controla la logica de movimiento
 	private boolean leftPressed = false;
 	private boolean rightPressed = false;
 	private boolean hPressed = false;
+
+	// controla la logica de disparo y la velocidad de que bajen los marcianos
 	int i = 0;
+
+	// variables de clase donde se va a guardar el nombre y contraseña ingresados por el usuario
 	static String username ;
 	static String password ;
 
+	// varaibles apra controlar la logica del panel para registrarse o continuar
 	private JPanel registrationPanel;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
 	private JButton startButton;
 	private JButton registerButton;
+	private boolean registerButtonPressed = false;
+	private boolean nextButtonPressed = false;
 
+	// Variables para controlar el panel del juego y el contenido de la ventana
 	private JPanel lienzo;
 	Container container;
 
@@ -41,12 +49,14 @@ public class Window extends JFrame implements KeyListener {
 		setContentPane(registrationPanel); // Establecer el panel de registro como el contenido inicial
 		setBackground(new Color(10, 10, 10));
 
+		setLocationRelativeTo(null);
 
 		setVisible(true);
 
 	}
 
 	private void createRegistrationPanel() {
+
 		registrationPanel = new JPanel(new GridBagLayout());
 		registrationPanel.setBackground(new Color(20, 20, 20));
 		registrationPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -76,7 +86,7 @@ public class Window extends JFrame implements KeyListener {
 		registrationPanel.add(passwordLabel, gbc);
 
 		gbc.gridx = 1;
-		passwordField = new JPasswordField(20);
+		passwordField = new JPasswordField(20); // Ancho predeterminado
 		registrationPanel.add(passwordField, gbc);
 
 		// Botón de registro
@@ -94,15 +104,30 @@ public class Window extends JFrame implements KeyListener {
 		registerButton.setFont(new Font("Arial", Font.BOLD, 14));
 		registrationPanel.add(registerButton, gbc);
 
-
+		// Listener para el botón de registro y que cree una nueva partida
 		registerButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
+				registerButtonPressed = true;
+				// Obtener el nombre de usuario y la contraseña del campo de texto y el campo de contraseña
 				username = usernameField.getText();
 				password = new String(passwordField.getPassword());
 
 				container = new Container(Window.this);
-				switchToGamePanel();
+
+				if(username.equals("") && password.equals("")){
+					JOptionPane.showMessageDialog(Window.this, "Porfavor llene los campos Usuario y Contraseña.", "Error", JOptionPane.ERROR_MESSAGE);
+				}else if(password.equals("")) {
+					JOptionPane.showMessageDialog(Window.this, "Por favor llene el campo Contraseña", "Error", JOptionPane.ERROR_MESSAGE);
+				}else if (username.equals("")) {
+					JOptionPane.showMessageDialog(Window.this, "Porfavor llene el campo Usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+
+				if (!username.equals("") && !password.equals("")) {
+					switchToGamePanel();
+				}
+
 			}
 		});
 
@@ -120,35 +145,47 @@ public class Window extends JFrame implements KeyListener {
 		startButton.setFont(new Font("Arial", Font.BOLD, 14));
 		registrationPanel.add(startButton, gbc);
 
+		// Listener para el botón de inicio de sesión y continue una partida
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
+				nextButtonPressed = true;
+				// Obtener el nombre de usuario y la contraseña del campo de texto y el campo de contraseña
 				username = usernameField.getText();
 				password = new String(passwordField.getPassword());
 
 				container = new Container(Window.this);
-				switchToGamePanel();
+				boolean userFound = container.getUser(username, password);
+
+				if (userFound) {
+					switchToGamePanel();
+				}else if(username.equals("") || password.equals("")){
+					JOptionPane.showMessageDialog(Window.this, "Por favor llene todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+				}else {
+					JOptionPane.showMessageDialog(Window.this, "Usuario o contraseña incorrectos. Inténtelo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
+
 		});
 	}
 
 	private void switchToGamePanel() {
 		lienzo = new JPanel();
 		lienzo.setBackground(new Color(10, 10, 10));
-		setContentPane(lienzo); // Cambiar al panel del juego
+		setContentPane(lienzo);
 
-		container = new Container(this); // Inicializar container
-
+		// timer para ejecutar las acciones de los aliens y las balas de los mismos
 		Timer timer = new Timer(1, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				container.moveUp(4);
 
-				if (i % 4 == 0) {
+				if (i % 3 == 0) {
 					container.moveDown(1);
 				}
 
-				if (i % 100 == 0) {
+				if (i % 75 == 0) {
 					container.createShoot_Alien();
 				}
 				i++;
@@ -158,26 +195,37 @@ public class Window extends JFrame implements KeyListener {
 		});
 		timer.start();
 
+
 		// Agregar el listener de teclado al nuevo contenido (panel de juego)
 		lienzo.addKeyListener(this);
 		lienzo.requestFocusInWindow(); // Asegurar que el panel de juego tenga el foco del teclado
 		lienzo.setFocusable(true); // Asegurar que el panel de juego sea focuseable
+
+		// Agregar un WindowListener para manejar el cierre de la ventana, que gestiona que se guarde el juego
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				container.closeWindowAndShowGameOver(true);
+				System.exit(0);
+			}
+		});
 	}
 
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
+
 		if (container != null) {
 			container.Draw(g);
-			container.updateGame();
+			container.updateGame(false);
 		}
 
 		if (leftPressed) {
-			container.moveLeft(10);
+			container.moveLeft(7);
 		}
 		if (rightPressed) {
-			container.moveRight(10);
+			container.moveRight(7);
 		}
 
 	}
@@ -235,4 +283,9 @@ public class Window extends JFrame implements KeyListener {
 	public static String getPassword() {
 		return password;
 	}
+
+	public boolean isRegisterButtonPressed() {
+		return registerButtonPressed;
+	}
+
 }

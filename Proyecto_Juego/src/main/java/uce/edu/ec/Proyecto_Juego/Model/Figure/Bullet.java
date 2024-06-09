@@ -6,8 +6,6 @@ import uce.edu.ec.Proyecto_Juego.Model.Interfaces.Movable;
 import java.awt.Color;
 import java.awt.Graphics;
 
-
-
 public class Bullet implements Drawable, Movable {
 
 	public int pos_X;
@@ -55,4 +53,5 @@ public class Bullet implements Drawable, Movable {
 	public int getY() {
 		return pos_Y;
 	}
+
 }
