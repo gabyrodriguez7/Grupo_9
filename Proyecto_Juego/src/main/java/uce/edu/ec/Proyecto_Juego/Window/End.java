@@ -48,14 +48,10 @@ public class End extends JFrame {
 		setContentPane(contentPane);
 
 		try {
-			// Ruta absoluta o relativa al archivo de imagen
-			File file = new File("src/main/resources/space.jpg");
-			if (file.exists()) {
-				background = ImageIO.read(file);
-			} else {
-				System.err.println("No se pudo encontrar la imagen en la ruta especificada.");
-			}
+			// Carga la imagen como un recurso
+			background = ImageIO.read(getClass().getResource("/space.jpg"));
 		} catch (IOException e) {
+			System.err.println("No se pudo encontrar la imagen en la ruta especificada.");
 			e.printStackTrace();
 		}
 
